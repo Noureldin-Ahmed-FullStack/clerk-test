@@ -19,15 +19,16 @@ const ClerkWithRoutes = () => {
       publishableKey={PUBLISHABLE_KEY}
     >
       <Routes>
-        <Route path="/" element={<App />} />
-        <Route
-          path="/sign-in/*"
-          element={<SignIn routing="path" path="/sign-in" />}
-        />
-        <Route
-          path="/sign-up/*"
-          element={<SignUp routing="path" path="/sign-up" />}
-        />
+        <Route path="/clerk-test" element={<App />}>
+          <Route
+            path="sign-in/*" // Removed the leading "/"
+            element={<SignIn routing="path" />}
+          />
+          <Route
+            path="sign-up/*" // Removed the leading "/"
+            element={<SignUp routing="path" />}
+          />
+        </Route>
       </Routes>
     </ClerkProvider>
   );
