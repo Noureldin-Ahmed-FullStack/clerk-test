@@ -2,41 +2,26 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
-import { ClerkProvider, SignIn, SignUp } from "@clerk/clerk-react";
-const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
+import { BrowserRouter, Route, RouterProvider, Routes, createBrowserRouter, createHashRouter, useNavigate } from "react-router-dom";
+import Layout from "./Components/Layout.jsx";
+import Test from "./Components/Test.jsx";
+import { SignIn, SignUp } from "@clerk/clerk-react";
 
-if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key");
-}
-
-const ClerkWithRoutes = () => {
-  const navigate = useNavigate();
-  return (
-    <ClerkProvider
-      routerPush={(to) => navigate(to)}
-      routerReplace={(to) => navigate(to, { replace: true })}
-      publishableKey={PUBLISHABLE_KEY}
-    >
-      <Routes>
-        <Route path="/clerk-test" element={<App />}>
-          <Route
-            path="sign-in/*" // Removed the leading "/"
-            element={<SignIn routing="path" />}
-          />
-          <Route
-            path="sign-up/*" // Removed the leading "/"
-            element={<SignUp routing="path" />}
-          />
-        </Route>
-      </Routes>
-    </ClerkProvider>
-  );
-};
+const router = createBrowserRouter([
+  {
+    element: <Layout />,
+    children: [
+      { path: "/", element: <App /> },
+      { path: "test", element: <Test /> },
+      { path: "sign-up", element: <SignUp /> },
+      { path: "sign-in", element: <SignIn /> },
+    ]
+  }
+], {
+  basename: "/clerk-test"
+});
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ClerkWithRoutes />
-    </BrowserRouter>
+    <RouterProvider router={router}  />
   </React.StrictMode>
 );
