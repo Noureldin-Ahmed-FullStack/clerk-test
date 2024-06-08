@@ -25,11 +25,11 @@ export default function Layout() {
     >
       <MyContextProvider>
         <SignedOut>
-          <div>
+          <div className="d-flex flex-column align-items-center">
             <h2>This app uses</h2>
             <h4>Clerk + React + Node + Mongo + Routing</h4>
-          </div>
           <SignUp />
+          </div>
         </SignedOut>
         <SignedIn>
           <main>

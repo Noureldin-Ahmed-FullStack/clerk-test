@@ -46,7 +46,6 @@ export default function Notes() {
         item.title.toLowerCase().includes(SearchQuerry.toLowerCase()) || item.content.toLowerCase().includes(SearchQuerry.toLowerCase())
       )
     : items; // Show all items if SearchQuerry is empty
-console.log(filteredItems);
   return (
     <div>
       <SearchBar SearchQuerry={SearchQuerry} onSearch={handleSearch} />
@@ -63,7 +62,7 @@ console.log(filteredItems);
         {filteredItems.map((item, index) => (
           <Item key={index}>
             <h4>{item.title}</h4>
-            <p className="my-2 text-start">{item.content}</p>
+            <p style={{ whiteSpace: 'pre-line' }} className="my-2 text-start">{item.content}</p>
           </Item>
         ))}
       </Masonry>
