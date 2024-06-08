@@ -1,6 +1,15 @@
 import React from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { ClerkProvider, SignIn, SignUp, SignedIn, SignedOut, UserButton } from "@clerk/clerk-react";
+
+import {
+  ClerkProvider,
+  SignIn,
+  SignUp,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/clerk-react";
+import MyContextProvider from "./ContextProvider";
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Publishable Key");
@@ -8,31 +17,26 @@ if (!PUBLISHABLE_KEY) {
 export default function Layout() {
   const navigate = useNavigate();
 
- 
   return (
     <ClerkProvider
       routerPush={(to) => navigate(to)}
       routerReplace={(to) => navigate(to, { replace: true })}
       publishableKey={PUBLISHABLE_KEY}
     >
-      <header className="header">
-        <div>
+      <MyContextProvider>
+        <SignedOut>
           <div>
-            <p>Clerk + React + React Router App</p>
+            <h2>This app uses</h2>
+            <h4>Clerk + React + Node + Mongo + Routing</h4>
           </div>
-          <SignedIn>
-            <UserButton afterSignOutUrl="/sign-in" />
-          </SignedIn>
-          <SignedOut>
-            <Link to="/sign-in">Sign In</Link>
-            <br />
-            <Link to="/sign-up">Sign Up</Link>
-          </SignedOut>
-        </div>
-      </header>
-      <main>
-        <Outlet />
-      </main>
+          <SignUp />
+        </SignedOut>
+        <SignedIn>
+          <main>
+            <Outlet />
+          </main>
+        </SignedIn>
+      </MyContextProvider>
     </ClerkProvider>
   );
 }
