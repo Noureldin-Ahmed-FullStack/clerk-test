@@ -79,18 +79,16 @@ const handleTitleChange = (e)=>{
               id="alert-dialog-slide-description"
             >
               <form onSubmit={handleSubmit}>
-              <p>{TitleState}</p>
                 <TextField
-                  id="outlined-textarea"
+                  id="Title-textarea"
                   label="Note Title"
                   placeholder="ex: Do Chores"
                   onChange={handleTitleChange}
                   className="my-3 w-100"
                   multiline
                 />
-                <p>{ContentState}</p>
                 <TextField
-                  id="outlined-textarea"
+                  id="Content-textarea"
                   label="Note Content"
                   placeholder={placeholderText}
                   rows={4}
@@ -105,8 +103,8 @@ const handleTitleChange = (e)=>{
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Disagree</Button>
-            <Button onClick={addPost}>Agree</Button>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={addPost}>Add note</Button>
           </DialogActions>
         </Dialog>
         <Notes />
