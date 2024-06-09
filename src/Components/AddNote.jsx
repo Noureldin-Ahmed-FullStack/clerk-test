@@ -42,7 +42,7 @@ const handleTitleChange = (e)=>{
       .then((response) => {
         console.log(response);
         handleClose();
-        window.location.reload();
+        FetchNotes()
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -119,7 +119,7 @@ const handleTitleChange = (e)=>{
             <Button onClick={addPost}>Add note</Button>
           </DialogActions>
         </Dialog>
-        <Notes items setItems FetchNotes/>
+        <Notes items={items} setItems={setItems} FetchNotes={FetchNotes}/>
       </ThemeProvider>
     </div>
   );

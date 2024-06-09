@@ -20,10 +20,9 @@ import Slide from "@mui/material/Slide";
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-export default function Notes() {
+export default function Notes({items ,setItems ,FetchNotes} ) {
   const [SearchQuerry, setSearchQuerry] = useState();
   const { UserDBData, setUserDBData } = useContext(MyContext);
-  const [items, setItems] = useState([]);
 
   const [open, setOpen] = useState(false);
   const [SelectedNote, setSelectedNote] = useState(false);
@@ -57,17 +56,6 @@ export default function Notes() {
     // e.preventDefault();
   };
 
-  const FetchNotes = () => {
-    axios
-      .post("http://localhost:3000/GetPosts", { user: UserDBData })
-      .then((response) => {
-        console.log(response.data);
-        setItems(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
   useEffect(() => {
     if (UserDBData) {
       FetchNotes()
