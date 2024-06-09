@@ -24,18 +24,9 @@ export default function Layout() {
       publishableKey={PUBLISHABLE_KEY}
     >
       <MyContextProvider>
-        <SignedOut>
-          <div className="d-flex flex-column align-items-center">
-            <h2>This app uses</h2>
-            <h4>Clerk + React + Node + Mongo + Routing</h4>
-          <SignUp />
-          </div>
-        </SignedOut>
-        <SignedIn>
-          <main>
+          <main className="d-flex w-100 flex-column align-items-center">
             <Outlet />
           </main>
-        </SignedIn>
       </MyContextProvider>
     </ClerkProvider>
   );

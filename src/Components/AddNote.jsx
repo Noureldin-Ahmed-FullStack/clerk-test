@@ -16,6 +16,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 export default function AddNote() {
   const [open, setOpen] = useState(false);
+  const [items, setItems] = useState([]);
   const [ContentState, setContentState] = useState();
   const [TitleState, setTitleState] = useState();
   const { UserDBData, setUserDBData } = useContext(MyContext);
@@ -57,6 +58,17 @@ const handleTitleChange = (e)=>{
       mode: "dark",
     },
   });
+  const FetchNotes = () => {
+    axios
+      .post("http://localhost:3000/GetPosts", { user: UserDBData })
+      .then((response) => {
+        console.log(response.data);
+        setItems(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
   const placeholderText = "ex: \n1- Make Breakfast\n2- Do dishes";
   return (
     <div>
@@ -107,7 +119,7 @@ const handleTitleChange = (e)=>{
             <Button onClick={addPost}>Add note</Button>
           </DialogActions>
         </Dialog>
-        <Notes />
+        <Notes items setItems FetchNotes/>
       </ThemeProvider>
     </div>
   );

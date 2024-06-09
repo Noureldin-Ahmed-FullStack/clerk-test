@@ -8,14 +8,21 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import Layout from "./Components/Layout.jsx";
-import { SignIn, SignUp } from "@clerk/clerk-react";
+import { RedirectToSignIn, SignIn, SignUp, SignedIn, SignedOut } from "@clerk/clerk-react";
 
 const router = createBrowserRouter(
   [
     {
       element: <Layout />,
       children: [
-        { path: "/", element: <App /> },
+        { path: "/", element: <>
+          <SignedIn>
+            <App />
+          </SignedIn>
+        <SignedOut>
+          <RedirectToSignIn />
+        </SignedOut>
+        </>},
         { path: "sign-up", element: <SignUp /> },
         { path: "sign-in", element: <SignIn /> },
       ],
