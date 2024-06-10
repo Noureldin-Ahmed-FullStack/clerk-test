@@ -10,6 +10,7 @@ import { TextField, ThemeProvider, createTheme } from "@mui/material";
 import Notes from "./Notes";
 import { MyContext } from "./ContextProvider";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -46,6 +47,16 @@ const handleTitleChange = (e)=>{
       })
       .catch((error) => {
         console.error("Error:", error);
+        toast.error(error.message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
         handleClose();
       });
   };
@@ -67,6 +78,16 @@ const handleTitleChange = (e)=>{
       })
       .catch((error) => {
         console.error("Error:", error);
+        toast.error(error.message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+        });
       });
   }
   const placeholderText = "ex: \n1- Make Breakfast\n2- Do dishes";

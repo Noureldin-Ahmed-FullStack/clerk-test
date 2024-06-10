@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import axios from "axios";
+import { toast } from "react-toastify";
 // import axios from "axios";
 
 export let MyContext = createContext();
@@ -47,6 +48,16 @@ export default function MyContextProvider(props) {
         })
         .catch((error) => {
           console.error("Error:", error);
+          toast.error(error.message, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+          });
         });
     }
   }, [isLoaded, isSignedIn, user]);
