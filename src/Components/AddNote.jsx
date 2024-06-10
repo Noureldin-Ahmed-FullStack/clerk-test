@@ -20,7 +20,7 @@ export default function AddNote() {
   const [items, setItems] = useState([]);
   const [ContentState, setContentState] = useState();
   const [TitleState, setTitleState] = useState();
-  const { UserDBData, setUserDBData } = useContext(MyContext);
+  const { UserDBData, setUserDBData,BaseURL } = useContext(MyContext);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -36,7 +36,7 @@ const handleTitleChange = (e)=>{
   const addPost = () => {
     console.log({title:TitleState,content:ContentState});
     axios
-      .post("http://localhost:3000/post", {
+      .post(`${BaseURL}/post`, {
         user: UserDBData,
         note: { title:TitleState, content:ContentState},
       })
@@ -71,7 +71,7 @@ const handleTitleChange = (e)=>{
   });
   const FetchNotes = () => {
     axios
-      .post("http://localhost:3000/GetPosts", { user: UserDBData })
+      .post(`${BaseURL}/GetPosts`, { user: UserDBData })
       .then((response) => {
         console.log(response.data);
         setItems(response.data);

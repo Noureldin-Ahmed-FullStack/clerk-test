@@ -23,7 +23,7 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 export default function Notes({items ,setItems ,FetchNotes} ) {
   const [SearchQuerry, setSearchQuerry] = useState();
-  const { UserDBData, setUserDBData } = useContext(MyContext);
+  const { UserDBData, setUserDBData,BaseURL } = useContext(MyContext);
 
   const [open, setOpen] = useState(false);
   const [SelectedNote, setSelectedNote] = useState(false);
@@ -45,7 +45,7 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
   const handleSubmit = async (e) => {
     console.log('test');
     axios
-      .put("http://localhost:3000/post", { user: UserDBData, postID: SelectedNote._id, title: TitleState, content: ContentState })
+      .put(`${BaseURL}/post`, { user: UserDBData, postID: SelectedNote._id, title: TitleState, content: ContentState })
       .then((response) => {
         console.log(response.data);
         FetchNotes()
@@ -99,7 +99,7 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
   const DeleteNote = (item) => {
     console.log(item);
     axios
-      .delete(`http://localhost:3000/post`, {
+      .delete(`${BaseURL}/post`, {
         data: {
           user: UserDBData,
           postID: item._id

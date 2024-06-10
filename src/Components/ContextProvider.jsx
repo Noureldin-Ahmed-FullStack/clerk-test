@@ -9,6 +9,7 @@ export let MyContext = createContext();
 export default function MyContextProvider(props) {
   const [UserDBData, setUserDBData] = useState();
   const [pending, setPending] = useState();
+  const BaseURL = import.meta.env.VITE_BASE_URL;
   // const fetchUserData = async (userId) => {
   //   console.log(userId);
   //   try {
@@ -41,7 +42,7 @@ export default function MyContextProvider(props) {
 
     if (isLoaded && isSignedIn && user) {
       axios
-        .post("http://localhost:3000/register", { user: user })
+        .post(`${BaseURL}/register`, { user: user })
         .then((response) => {
           console.log("Success:", response.data);
           setUserDBData(response.data)
@@ -67,6 +68,7 @@ export default function MyContextProvider(props) {
     setPending,
     UserDBData,
     setUserDBData,
+    BaseURL
   };
 
   return (

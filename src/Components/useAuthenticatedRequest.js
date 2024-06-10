@@ -1,8 +1,11 @@
 // useAuthenticatedRequest.js
 import { useClerk, useSession } from "@clerk/clerk-react";
+import { useContext } from "react";
+import { MyContext } from "./ContextProvider";
 
 const useAuthenticatedRequest = () => {
   const { user } = useClerk();
+  const {BaseURL } = useContext(MyContext);
 
   const authenticatedFetch = async (options = {}) => {
     const headers = {
@@ -10,7 +13,7 @@ const useAuthenticatedRequest = () => {
       Authorization: `Bearer ${user}`,
     };
 
-    const response = await fetch("http://localhost:3000/register", {
+    const response = await fetch(`${BaseURL}/register`, {
       ...options,
       headers,
     });
