@@ -4,7 +4,7 @@ import { Masonry } from "@mui/lab";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
-import { Container, TextField, ThemeProvider, createTheme } from "@mui/material";
+import { Container, TextField, ThemeProvider, ToggleButton, ToggleButtonGroup, createTheme } from "@mui/material";
 import { MyContext } from "./ContextProvider";
 import Button from "@mui/material/Button";
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -21,9 +21,9 @@ import { toast } from "react-toastify";
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
-export default function Notes({items ,setItems ,FetchNotes} ) {
+export default function Notes({ items, setItems, FetchNotes }) {
   const [SearchQuerry, setSearchQuerry] = useState();
-  const { UserDBData, setUserDBData,BaseURL } = useContext(MyContext);
+  const { UserDBData, pending, setPending, setUserDBData, BaseURL } = useContext(MyContext);
 
   const [open, setOpen] = useState(false);
   const [SelectedNote, setSelectedNote] = useState(false);
@@ -41,11 +41,20 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
   const handleClose = () => {
     setOpen(false);
   };
+  const [alignment, setAlignment] = useState('yellow');
+
+  const handleChange = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
 
   const handleSubmit = async (e) => {
     console.log('test');
     axios
-      .put(`${BaseURL}/post`, { user: UserDBData, postID: SelectedNote._id, title: TitleState, content: ContentState })
+      .put(`${BaseURL}/post`, {
+        user: UserDBData,
+        postID: SelectedNote._id,
+        note: { title:TitleState, content:ContentState,theme:alignment}
+      })
       .then((response) => {
         console.log(response.data);
         FetchNotes()
@@ -54,14 +63,14 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
       .catch((error) => {
         console.error("Error:", error);
         toast.error(error.message, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
         });
       });
     // e.preventDefault();
@@ -75,14 +84,15 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
   }, [UserDBData]);
 
   const placeholderText = "ex: \n1- Make Breakfast\n2- Do dishes";
-  const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === "dark" ? "#e9e9c0" : "#fff",
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: "center",
-    color: "black",
-    position: "relative"
-  }));
+  const Item = ({ Data, color_theme }) => {
+    console.log(color_theme);
+    return (
+      <div style={{ color: '#000', backgroundColor: color_theme ? color_theme : "#e9e9c0" }}>
+        <h4>{Data?.title}</h4>
+        <p>{Data?.content}</p>
+      </div>
+    )
+  }
   const handleSearch = (query) => {
     setSearchQuerry(query);
   };
@@ -93,6 +103,8 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
     : items; // Show all items if SearchQuerry is empty
 
   const EditNote = (item) => {
+    setTitleState(item.title)
+    setContentState(item.content)
     setSelectedNote(item)
     handleClickOpen()
   }
@@ -112,14 +124,14 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
       .catch((error) => {
         console.error("Error:", error);
         toast.error(error.message, {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
         });
       });
 
@@ -157,10 +169,22 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
             id="alert-dialog-slide-description"
           >
             <form>
+              <ToggleButtonGroup
+                value={alignment}
+                exclusive
+                onChange={handleChange}
+                aria-label="Platform"
+              >
+                <ToggleButton value="#e9e9c0"><div className="colorPick pickYellow"></div></ToggleButton>
+                <ToggleButton value="#f4afb4"><div className="colorPick pickPink"></div></ToggleButton>
+                <ToggleButton value="#df3b57"><div className="colorPick pickRed"></div></ToggleButton>
+                <ToggleButton value="#bbe1c3"><div className="colorPick pickGreen"></div></ToggleButton>
+                <ToggleButton value="#09c"><div className="colorPick pickBlue"></div></ToggleButton>
+              </ToggleButtonGroup>
               <TextField
                 id="Title-textarea"
                 label="Note Title"
-                placeholder="ex: Do Chores"
+                placeholder={TitleState? TitleState : "ex: Do Chores"}
                 onChange={handleTitleChange}
                 className="my-3 w-100"
                 multiline
@@ -168,7 +192,7 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
               <TextField
                 id="Content-textarea"
                 label="Note Content"
-                placeholder={placeholderText}
+                placeholder={ContentState? ContentState : placeholderText}
                 rows={4}
                 className="my-3 w-100"
                 multiline
@@ -185,14 +209,17 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
           <Button onClick={handleSubmit}>Edit note</Button>
         </DialogActions>
       </Dialog>
-      <Container>
+      {pending ? (<>
+        <h2>Loading...</h2>
+        <p className="loadingText mt-2">This wont take long just waking up server Shh!</p>
+      </>) : (<Container>
         <Masonry
           className="my-2"
           columns={{ xs: 2, sm: 2, md: 4, lg: 4 }}
           spacing={2}
         >
           {filteredItems.map((item, index) => (
-            <Item key={index}>
+            <div key={item._id} className="rounded-2 py-1 px-3 position-relative" style={{ color: '#000', backgroundColor: item.theme ? item.theme : "#e9e9c0" }}>
               <div className="position-absolute" style={{ right: "0.8rem" }}>
                 {/* <DeleteOutlineIcon />
             <EditOutlinedIcon /> */}
@@ -208,10 +235,12 @@ export default function Notes({items ,setItems ,FetchNotes} ) {
               </div>
               <h4>{item.title}</h4>
               <p style={{ whiteSpace: 'pre-line' }} className="my-2 text-start">{item.content}</p>
-            </Item>
+            </div>
+
           ))}
         </Masonry>
-      </Container>
+      </Container>)}
+
     </div>
   );
 }

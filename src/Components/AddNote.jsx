@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-import { TextField, ThemeProvider, createTheme } from "@mui/material";
+import { TextField, ThemeProvider, ToggleButton, ToggleButtonGroup, createTheme } from "@mui/material";
 import Notes from "./Notes";
 import { MyContext } from "./ContextProvider";
 import axios from "axios";
@@ -20,7 +20,7 @@ export default function AddNote() {
   const [items, setItems] = useState([]);
   const [ContentState, setContentState] = useState();
   const [TitleState, setTitleState] = useState();
-  const { UserDBData, setUserDBData,BaseURL } = useContext(MyContext);
+  const { UserDBData, setUserDBData,BaseURL,setPending } = useContext(MyContext);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -38,7 +38,7 @@ const handleTitleChange = (e)=>{
     axios
       .post(`${BaseURL}/post`, {
         user: UserDBData,
-        note: { title:TitleState, content:ContentState},
+        note: { title:TitleState, content:ContentState,theme:alignment}
       })
       .then((response) => {
         console.log(response);
@@ -69,15 +69,23 @@ const handleTitleChange = (e)=>{
       mode: "dark",
     },
   });
+  const [alignment, setAlignment] = useState('yellow');
+
+  const handleChange = (event, newAlignment) => {
+    setAlignment(newAlignment);
+  };
   const FetchNotes = () => {
+    setPending(true)
     axios
       .post(`${BaseURL}/GetPosts`, { user: UserDBData })
       .then((response) => {
         console.log(response.data);
         setItems(response.data);
+        setPending(false)
       })
       .catch((error) => {
         console.error("Error:", error);
+        setPending(false)
         toast.error(error.message, {
             position: "top-center",
             autoClose: 5000,
@@ -112,6 +120,19 @@ const handleTitleChange = (e)=>{
               id="alert-dialog-slide-description"
             >
               <form onSubmit={handleSubmit}>
+                
+              <ToggleButtonGroup
+                value={alignment}
+                exclusive
+                onChange={handleChange}
+                aria-label="Platform"
+              >
+                <ToggleButton value="#e9e9c0"><div className="colorPick pickYellow"></div></ToggleButton>
+                <ToggleButton value="#f4afb4"><div className="colorPick pickPink"></div></ToggleButton>
+                <ToggleButton value="#df3b57"><div className="colorPick pickRed"></div></ToggleButton>
+                <ToggleButton value="#bbe1c3"><div className="colorPick pickGreen"></div></ToggleButton>
+                <ToggleButton value="#09c"><div className="colorPick pickBlue"></div></ToggleButton>
+              </ToggleButtonGroup>
                 <TextField
                   id="Title-textarea"
                   label="Note Title"

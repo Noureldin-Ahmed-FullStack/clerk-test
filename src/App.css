@@ -58,3 +58,29 @@
   min-width: 2rem !important;
   transform: translate(-20px, 26px) !important;
 }
+.loadingText{
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0% {
+      transform: scale(1);
+      opacity: 1;
+  }
+  50% {
+      transform: scale(1.1);
+      opacity: 0.7;
+  }
+  100% {
+      transform: scale(1);
+      opacity: 1;
+  }
+}
+.colorPick{
+  width: 15px;
+  height: 15px;
+}
+.pickYellow{background-color: #e9e9c0;}
+.pickPink{background-color: #f4afb4;}
+.pickRed{background-color: #df3b57;}
+.pickGreen{background-color: #bbe1c3;}
+.pickBlue{background-color: #09c;}

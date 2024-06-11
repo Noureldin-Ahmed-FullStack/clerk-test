@@ -8,7 +8,7 @@ export let MyContext = createContext();
 
 export default function MyContextProvider(props) {
   const [UserDBData, setUserDBData] = useState();
-  const [pending, setPending] = useState();
+  const [pending, setPending] = useState(false);
   const BaseURL = import.meta.env.VITE_BASE_URL;
   // const fetchUserData = async (userId) => {
   //   console.log(userId);
@@ -38,6 +38,7 @@ export default function MyContextProvider(props) {
   const { isLoaded, isSignedIn, user } = useUser();
 
   useEffect(() => {
+    setPending(true)
     console.log(user);
 
     if (isLoaded && isSignedIn && user) {
@@ -46,9 +47,11 @@ export default function MyContextProvider(props) {
         .then((response) => {
           console.log("Success:", response.data);
           setUserDBData(response.data)
+          setPending(false)
         })
         .catch((error) => {
           console.error("Error:", error);
+          setPending(false)
           toast.error(error.message, {
               position: "top-center",
               autoClose: 5000,
