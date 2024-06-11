@@ -209,10 +209,10 @@ export default function Notes({ items, setItems, FetchNotes }) {
           <Button onClick={handleSubmit}>Edit note</Button>
         </DialogActions>
       </Dialog>
-      {pending ? (<>
+      {pending ? (<div className="w-75 mx-auto">
         <h2>Loading...</h2>
         <p className="loadingText mt-2">This wont take long just waking up server Shh!</p>
-      </>) : (<Container>
+      </div>) : (<Container>
         <Masonry
           className="my-2"
           columns={{ xs: 2, sm: 2, md: 4, lg: 4 }}
