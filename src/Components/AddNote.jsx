@@ -1,4 +1,4 @@
-import React, { forwardRef, useContext, useState } from "react";
+import React, { forwardRef, useContext, useRef, useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -21,6 +21,8 @@ export default function AddNote() {
   const [ContentState, setContentState] = useState();
   const [TitleState, setTitleState] = useState();
   const { UserDBData, setUserDBData,BaseURL,setPending } = useContext(MyContext);
+  const titleRef = useRef(null);
+  const contenteRef = useRef(null);
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -43,6 +45,11 @@ const handleTitleChange = (e)=>{
       .then((response) => {
         console.log(response);
         handleClose();
+        setContentState(null)
+        setTitleState(null)
+        titleRef.current.value = '';
+        contenteRef.current.value = '';
+        setAlignment('#e9e9c0')
         FetchNotes()
       })
       .catch((error) => {
@@ -61,7 +68,7 @@ const handleTitleChange = (e)=>{
       });
   };
   const handleSubmit = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     addPost();
   };
   const theme = createTheme({
@@ -69,7 +76,7 @@ const handleTitleChange = (e)=>{
       mode: "dark",
     },
   });
-  const [alignment, setAlignment] = useState('yellow');
+  const [alignment, setAlignment] = useState('#e9e9c0');
 
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -138,6 +145,7 @@ const handleTitleChange = (e)=>{
                   label="Note Title"
                   placeholder="ex: Do Chores"
                   onChange={handleTitleChange}
+                  inputRef={titleRef}
                   className="my-3 w-100"
                   multiline
                 />
@@ -149,6 +157,7 @@ const handleTitleChange = (e)=>{
                   className="my-3 w-100"
                   multiline
                   onChange={handleContentChange}
+                  inputRef={contenteRef}
                   InputProps={{
                     style: { whiteSpace: "pre-line" }, // Allow newline in placeholder
                   }}

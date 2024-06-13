@@ -1,4 +1,4 @@
-import React, { forwardRef, useContext, useEffect, useState } from "react";
+import React, { forwardRef, useContext, useEffect, useRef, useState } from "react";
 import SearchBar from "./SearchBar";
 import { Masonry } from "@mui/lab";
 import { styled } from "@mui/material/styles";
@@ -41,7 +41,9 @@ export default function Notes({ items, setItems, FetchNotes }) {
   const handleClose = () => {
     setOpen(false);
   };
-  const [alignment, setAlignment] = useState('yellow');
+  const [alignment, setAlignment] = useState('#e9e9c0');
+  const titleRef = useRef(null);
+  const contenteRef = useRef(null);
 
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -58,6 +60,11 @@ export default function Notes({ items, setItems, FetchNotes }) {
       .then((response) => {
         console.log(response.data);
         FetchNotes()
+        setContentState(null)
+        setTitleState(null)
+        titleRef.current.value = '';
+        contenteRef.current.value = '';
+        setAlignment('#e9e9c0')
         handleClose();
       })
       .catch((error) => {
@@ -186,6 +193,7 @@ export default function Notes({ items, setItems, FetchNotes }) {
                 label="Note Title"
                 placeholder={TitleState? TitleState : "ex: Do Chores"}
                 onChange={handleTitleChange}
+                inputRef={titleRef}
                 className="my-3 w-100"
                 multiline
               />
@@ -197,6 +205,7 @@ export default function Notes({ items, setItems, FetchNotes }) {
                 className="my-3 w-100"
                 multiline
                 onChange={handleContentChange}
+                inputRef={contenteRef}
                 InputProps={{
                   style: { whiteSpace: "pre-line" }, // Allow newline in placeholder
                 }}
@@ -209,7 +218,7 @@ export default function Notes({ items, setItems, FetchNotes }) {
           <Button onClick={handleSubmit}>Edit note</Button>
         </DialogActions>
       </Dialog>
-      {pending ? (<div className="w-75 mx-auto">
+      {pending ? (<div className="w-75 mt-2 mx-auto">
         <h2>Loading...</h2>
         <p className="loadingText mt-2">This wont take long just waking up server Shh!</p>
       </div>) : (<Container>
@@ -219,10 +228,11 @@ export default function Notes({ items, setItems, FetchNotes }) {
           spacing={2}
         >
           {filteredItems.map((item, index) => (
-            <div key={item._id} className="rounded-2 py-1 px-3 position-relative" style={{ color: '#000', backgroundColor: item.theme ? item.theme : "#e9e9c0" }}>
-              <div className="position-absolute" style={{ right: "0.8rem" }}>
-                {/* <DeleteOutlineIcon />
-            <EditOutlinedIcon /> */}
+            <div key={item._id} className="rounded-2 py-1 px-3" style={{ color: '#000', backgroundColor: item.theme ? item.theme : "#e9e9c0" }}>
+              <div className=" d-flex justify-content-between">
+                <div style={{width:'24px'}}>{'\n'}</div>
+              <h4>{item.title}</h4>
+              <div className="" style={{ right: "0.8rem" }}>
                 <Dropdown drop="down-centered" id={index} variant='secondary'>
                   <Dropdown.Toggle as={CustomToggle} variant="success" id="dropdown-basic">
                   </Dropdown.Toggle>
@@ -233,7 +243,7 @@ export default function Notes({ items, setItems, FetchNotes }) {
                   </Dropdown.Menu>
                 </Dropdown>
               </div>
-              <h4>{item.title}</h4>
+              </div>
               <p style={{ whiteSpace: 'pre-line' }} className="my-2 text-start">{item.content}</p>
             </div>
 

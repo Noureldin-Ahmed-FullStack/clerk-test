@@ -23,8 +23,8 @@ const router = createBrowserRouter(
           <RedirectToSignIn />
         </SignedOut>
         </>},
-        { path: "sign-up", element: <SignUp /> },
-        { path: "sign-in", element: <SignIn /> },
+        { path: "sign-up", element: <SignUp forceRedirectUrl={'/clerk-test'}/> },
+        { path: "sign-in", element: <SignIn forceRedirectUrl={'/clerk-test'}/> },
       ],
     },
   ],
